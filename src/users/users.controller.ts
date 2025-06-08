@@ -1,7 +1,6 @@
 import { Controller, Post, Get, Body, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserRequest } from './dto/create-user.request';
-import { AnyFilesInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { TokenPayload } from 'src/auth/token-payload.interface';
