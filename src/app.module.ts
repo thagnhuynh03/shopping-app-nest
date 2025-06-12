@@ -36,7 +36,11 @@ import { CheckoutModule } from './checkout/checkout.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public')
     }),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }
+
+    ),
     UsersModule,
     PrismaModule,
     AuthModule,
