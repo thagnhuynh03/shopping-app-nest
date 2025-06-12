@@ -61,7 +61,7 @@ export class ProductsService {
     private async imageExists(productId: number) {
       try {
         await fs.access(
-          join(__dirname, '../../', `public/products/${productId}.jpeg`),
+          join(__dirname, '../../', `public/images/products/${productId}.jpeg`),
           fs.constants.F_OK,
         );
         return true;

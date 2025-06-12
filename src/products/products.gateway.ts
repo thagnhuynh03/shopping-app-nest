@@ -17,11 +17,11 @@ export class ProductsGateway {
     this.server.emit('productUpdated');
   }
 
-//   handleConnection(client: Socket) {
-//     try {
-//       this.authService.verifyToken(client.handshake.auth.Authentication.value);
-//     } catch (err) {
-//       throw new WsException('Unauthorized.');
-//     }
-//   }
+  handleConnection(client: Socket) {
+    try {
+      this.authService.verifyToken(client.handshake.auth.Authentication.value);
+    } catch (err) {
+      throw new WsException('Unauthorized.');
+    }
+  }
 }
