@@ -50,8 +50,8 @@ export class ProductsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getProducts(@Query('status') status?: string) {
-    return await this.productsService.getProducts(status);
+  async getProducts(@Query('query') query?: string) {
+    return await this.productsService.getProducts(query);
   }
 
   @Get(':productId')

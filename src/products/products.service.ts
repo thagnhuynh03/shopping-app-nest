@@ -24,10 +24,25 @@ export class ProductsService {
       return product;
     }
 
-    async getProducts(status?: string) {
+    async getProducts(query?: string) {
       const args: Prisma.ProductFindManyArgs = {};
-      if (status === 'availible') {
-        args.where = { sold: false };
+      if (query) {
+        args.where = {
+          OR: [
+            {
+              name: {
+                contains: query,
+                mode: 'insensitive', // Không phân biệt hoa thường
+              },
+            },
+            {
+              description: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        };
       }
       const products = await this.prismaService.product.findMany(args);
       return Promise.all(
