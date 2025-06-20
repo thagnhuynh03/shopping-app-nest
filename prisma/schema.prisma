@@ -21,5 +21,4 @@ model Product {
   description String
   userId Int
   user User @relation(fields: [userId], references: [id])
-  sold Boolean @default(false)
 }

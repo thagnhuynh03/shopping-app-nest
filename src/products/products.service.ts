@@ -24,33 +24,45 @@ export class ProductsService {
       return product;
     }
 
-    async getProducts(query?: string) {
-      const args: Prisma.ProductFindManyArgs = {};
+    async getProducts(query?: string, page = 1, pageSize = 8, minPrice?: number, maxPrice?: number) {
+      const args: Prisma.ProductFindManyArgs = { where: {} };
+
+      // Search by name/description
       if (query) {
         args.where = {
+          ...args.where,
           OR: [
-            {
-              name: {
-                contains: query,
-                mode: 'insensitive', // Không phân biệt hoa thường
-              },
-            },
-            {
-              description: {
-                contains: query,
-                mode: 'insensitive',
-              },
-            },
+            { name: { contains: query, mode: 'insensitive' } },
+            { description: { contains: query, mode: 'insensitive' } },
           ],
         };
       }
+
+      // Filter by price range
+      let price: any = (args.where!).price || {};
+      if (minPrice !== undefined) price.gte = minPrice;
+      if (maxPrice !== undefined) price.lte = maxPrice;
+      if (minPrice !== undefined || maxPrice !== undefined) {
+        (args.where!).price = price;
+      }
+
+      // Get total count for pagination
+      const total = await this.prismaService.product.count({ where: args.where });
+
+      // Pagination
+      args.skip = (page - 1) * pageSize;
+      args.take = pageSize;
+
       const products = await this.prismaService.product.findMany(args);
-      return Promise.all(
+
+      const productsWithImage = await Promise.all(
         products.map(async (product) => ({
           ...product,
           imageExists: await this.imageExists(product.id),
         })),
       );
+
+      return { products: productsWithImage, total };
     }
 
     async getProduct(productId: number) {

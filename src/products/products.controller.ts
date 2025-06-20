@@ -50,8 +50,18 @@ export class ProductsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getProducts(@Query('query') query?: string) {
-    return await this.productsService.getProducts(query);
+  async getProducts(
+    @Query('query') query?: string,
+    @Query('page') page: string = '1',
+    @Query('pageSize') pageSize: string = '8',
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
+  ) {
+    const pageNum = parseInt(page, 10) || 1;
+    const pageSizeNum = parseInt(pageSize, 10) || 8;
+    const minPriceNum = minPrice !== undefined ? parseFloat(minPrice) : undefined;
+    const maxPriceNum = maxPrice !== undefined ? parseFloat(maxPrice) : undefined;
+    return await this.productsService.getProducts(query, pageNum, pageSizeNum, minPriceNum, maxPriceNum);
   }
 
   @Get(':productId')

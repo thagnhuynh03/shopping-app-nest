@@ -5,6 +5,9 @@ export class CreateUserRequest {
     @IsNotEmpty()
     email: string;
 
-    @IsStrongPassword()
+    @IsStrongPassword({}, {
+        message:
+          "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character",
+      })
     password: string;
 }
