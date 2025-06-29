@@ -10,6 +10,8 @@ import { ProductsModule } from './products/products.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CheckoutModule } from './checkout/checkout.module';
+import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
 @Module({
   imports: [
     LoggerModule.forRootAsync({
@@ -46,6 +48,8 @@ import { CheckoutModule } from './checkout/checkout.module';
     AuthModule,
     ProductsModule,
     CheckoutModule,
+    CartModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

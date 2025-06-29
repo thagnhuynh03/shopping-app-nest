@@ -67,9 +67,34 @@ export class ProductsService {
 
     async getProduct(productId: number) {
       try {
+        const product = await this.prismaService.product.findUniqueOrThrow({
+          where: { id: productId },
+          include: {
+            colors: {
+              include: {
+                color: true,
+                size: {
+                  include: {
+                    size: true,
+                  },
+                },
+              },
+            },
+          },
+        });
         return {
-          ...(await this.prismaService.product.findUniqueOrThrow({
-            where: { id: productId },
+          ...product,
+          colors: product.colors.map((pc) => ({
+            id: pc.id,
+            colorId: pc.color.id,
+            name: pc.color.name,
+            sizes: pc.size.map((ps) => ({
+              id: ps.id,
+              sizeId: ps.size.id,
+              name: ps.size.name,
+              stock: ps.stock,
+              price: ps.price,
+            })),
           })),
           imageExists: await this.imageExists(productId),
         };
@@ -88,7 +113,7 @@ export class ProductsService {
     private async imageExists(productId: number) {
       try {
         await fs.access(
-          join(__dirname, '../../', `public/images/products/${productId}.jpeg`),
+          join(__dirname, '../../', `public/images/products/${productId}.jpg`),
           fs.constants.F_OK,
         );
         return true;
