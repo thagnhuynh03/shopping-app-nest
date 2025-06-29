@@ -21,7 +21,7 @@ export class CheckoutService {
         userId,
         cart: JSON.stringify(data.cart), // Only if small!
         addressId: data.addressId,
-        status: 'waiting_for_delivery',
+        status: 'Waiting for delivery',
       },
       line_items: cartItems.map(item => ({
         price_data: {
