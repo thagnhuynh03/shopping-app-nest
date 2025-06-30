@@ -59,4 +59,18 @@ export class OrderService {
       },
     });
   }
+
+  async cancelOrder(userId: number, orderId: number) {
+    // Only allow cancelling if the order belongs to the user and is pending
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, userId, status: "pending" },
+    });
+    if (!order) {
+      throw new Error("Order not found or cannot be cancelled");
+    }
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: "cancelled" },
+    });
+  }
 }

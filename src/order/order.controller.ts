@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards, BadRequestException, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -26,5 +26,14 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   async getOrders(@CurrentUser() user: TokenPayload) {
     return this.orderService.getOrders(user.userId);
+  }
+
+  @Patch(':id/cancel')
+  @UseGuards(JwtAuthGuard)
+  async cancelOrder(
+    @CurrentUser() user: TokenPayload,
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.orderService.cancelOrder(user.userId, id);
   }
 }
